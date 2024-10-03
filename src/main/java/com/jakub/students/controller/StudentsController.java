@@ -2,6 +2,7 @@ package com.jakub.students.controller;
 
 import com.jakub.students.repository.StudentRepository;
 import com.jakub.students.model.Student;
+import com.jakub.students.security.AuthenticationService;
 import com.jakub.students.service.StudentService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,9 +26,11 @@ public class StudentsController {
     @Autowired
     private final StudentService studentService;
 
-    public StudentsController(StudentService studentService) {
+
+    public StudentsController(StudentService studentService, AuthenticationService authenticationService) {
         this.studentService = studentService;
     }
+
 
 
     @GetMapping
