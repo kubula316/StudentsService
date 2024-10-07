@@ -1,4 +1,4 @@
-package com.jakub.students.config;
+package com.jakub.students.security;
 
 import com.jakub.students.security.JwtAuthenticationFilter;
 import jakarta.servlet.Filter;
