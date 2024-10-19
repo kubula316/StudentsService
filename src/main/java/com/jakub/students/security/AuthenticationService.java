@@ -45,4 +45,8 @@ public class AuthenticationService {
         return AuthenticationResponse.builder()
                 .token(jwtToken).build();
     }
+
+    public boolean isTokenValid(String token) {
+        return !jwtService.isTokenExpired(token);
+    }
 }
