@@ -11,7 +11,8 @@ public class StudentExceptionHandler {
 
     @ExceptionHandler(value = StudentException.class)
     public ResponseEntity<com.jakub.students.exception.ErrorInfo> handleException(StudentException e){
-        if (e.getStudentError().equals(StudentError.MAIL_CONFILCT)){
+        if (e.getStudentError().equals(StudentError.MAIL_CONFILCT)
+            ||e.getStudentError().equals(StudentError.CAN_NOT_ADD_COURSE)){
             return ResponseEntity.status(HttpStatus.CONFLICT).body(new ErrorInfo(e.getStudentError().getMessage()));
         }
         if (e.getStudentError().equals(StudentError.STUDENT_NOT_FOUND)){

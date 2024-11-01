@@ -12,6 +12,9 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class AuthenticationService {
@@ -30,6 +33,8 @@ public class AuthenticationService {
                 .status(Student.Status.ACTIVE)
                 .password(passwordEncoder.encode(request.getPassword()))
                 .role(Role.USER)
+                .enrolledCourses(new ArrayList<String>())
+                .profileImageUrl("https://coursesapp.blob.core.windows.net/student-profile-image-container/BlankProfile.png")
                 .build();
         studentRepository.save(user);
         var jwtToken = jwtService.generateToken(user);

@@ -18,4 +18,5 @@ public interface StudentService {
 
     List<Student> getStudentsByEmail(List<String> list);
 
+    void addCourse(Long id, String courseCode);
 }

@@ -58,6 +58,11 @@ public class StudentsController {
         return studentService.putStudent(id, student);
     }
 
+    @PostMapping("/addCourse")
+    public void addCourse(@RequestParam Long id, @RequestParam String courseCode){
+        studentService.addCourse(id, courseCode);
+    }
+
 
     @PatchMapping("/{id}")
     public Student patchStudent(@PathVariable Long id,@RequestBody Student student){

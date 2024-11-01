@@ -94,5 +94,16 @@ public class StudentServiceImpl implements StudentService {
         return studentRepository.findAllByEmailIn(list);
     }
 
+    @Override
+    public void addCourse(Long id, String courseCode) {
+        try {
+            Student student = studentRepository.findById(id).orElseThrow(() -> new StudentException(StudentError.STUDENT_NOT_FOUND));
+            student.getEnrolledCourses().add(courseCode);
+            studentRepository.save(student);
+        } catch (Exception e){
+            throw new StudentException(StudentError.CAN_NOT_ADD_COURSE);
+        }
+    }
+
 
 }
