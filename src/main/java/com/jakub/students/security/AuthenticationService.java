@@ -25,7 +25,6 @@ public class AuthenticationService {
     private final AuthenticationManager authenticationManager;
 
     public AuthenticationResponse register(RegisterRequest request) {
-        System.out.println(request);
         var user = Student.builder()
                 .email(request.getEmail())
                 .firstName(request.getFirstname())
@@ -37,7 +36,7 @@ public class AuthenticationService {
                 .profileImageUrl("https://coursesapp.blob.core.windows.net/student-profile-image-container/BlankProfile.png")
                 .build();
         studentRepository.save(user);
-        var jwtToken = jwtService.generateToken(user);
+        var jwtToken = jwtService.generateToken(user, user.getId());
         return AuthenticationResponse.builder()
                 .token(jwtToken).build();
     }
@@ -46,7 +45,7 @@ public class AuthenticationService {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getEmail(), request.getPassword()));
         var user = studentRepository.findByEmail(request.getEmail())
                 .orElseThrow();
-        var jwtToken = jwtService.generateToken(user);
+        var jwtToken = jwtService.generateToken(user, user.getId());
         return AuthenticationResponse.builder()
                 .token(jwtToken).build();
     }

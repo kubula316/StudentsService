@@ -4,9 +4,13 @@ import com.jakub.students.exception.StudentError;
 import com.jakub.students.exception.StudentException;
 import com.jakub.students.model.Student;
 import com.jakub.students.repository.StudentRepository;
+import com.jakub.students.storage.ImageStorageClient;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -14,9 +18,12 @@ import java.util.Optional;
 @Service
 public class StudentServiceImpl implements StudentService {
     private final StudentRepository studentRepository;
+    private final ImageStorageClient imageStorageClient;
 
-    public StudentServiceImpl(StudentRepository studentRepository) {
+
+    public StudentServiceImpl(StudentRepository studentRepository, ImageStorageClient imageStorageClient) {
         this.studentRepository = studentRepository;
+        this.imageStorageClient = imageStorageClient;
     }
 
     @Override
@@ -102,6 +109,23 @@ public class StudentServiceImpl implements StudentService {
             studentRepository.save(student);
         } catch (Exception e){
             throw new StudentException(StudentError.CAN_NOT_ADD_COURSE);
+        }
+    }
+
+    @Override
+    public Student updateImageProfile(Long id, String containerName, MultipartFile file) {
+        Student student = studentRepository.findById(id).orElseThrow(() -> new StudentException(StudentError.STUDENT_NOT_FOUND));
+        try {
+            student.setProfileImageUrl(uploadImage(containerName, file));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        return studentRepository.save(student);
+    }
+
+    public String uploadImage(String containerName, MultipartFile file)throws IOException {
+        try(InputStream inputStream = file.getInputStream()) {
+            return this.imageStorageClient.uploadImage(containerName, file.getOriginalFilename(), inputStream, file.getSize());
         }
     }
 

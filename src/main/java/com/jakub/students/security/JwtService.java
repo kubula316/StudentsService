@@ -22,8 +22,10 @@ public class JwtService {
         return extractClaim(token, Claims::getSubject);
     }
 
-    public String generateToken(UserDetails userDetails){
-        return generateToken(new HashMap<>(), userDetails);
+    public String generateToken(UserDetails userDetails, Long userId) {
+        Map<String, Object> extraClaims = new HashMap<>();
+        extraClaims.put("id", userId); // Dodanie ID użytkownika do claims
+        return generateToken(extraClaims, userDetails);
     }
     public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails){
         return Jwts
@@ -64,5 +66,10 @@ public class JwtService {
 
     private Date extractExpiration(String token) {
         return extractClaim(token, Claims::getExpiration);
+    }
+
+    public Long extractUserId(String token) {
+        Claims claims = extractAllClaims(token);
+        return claims.get("id", Long.class); // Zakładając, że ID jest typu Long
     }
 }

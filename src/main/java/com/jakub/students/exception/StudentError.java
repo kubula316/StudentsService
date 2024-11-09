@@ -6,7 +6,8 @@ public enum StudentError {
 
     MAIL_CONFILCT("Student with this mail exists"),
 
-    STUDENT_INACTIVE("Student is inactive");
+    STUDENT_INACTIVE("Student is inactive"),
+    FAILED_TO_UPLOAD_IMAGE("Failed to upload image");
 
     private  String message;
 

@@ -15,6 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -72,6 +73,12 @@ public class StudentsController {
     @PostMapping("/members")
     public List<Student> getCourseMembers(@RequestBody List<String> mailList){
         return studentService.getStudentsByEmail(mailList);
+    }
+
+    @PostMapping("/update")
+    @ResponseStatus(HttpStatus.CREATED)
+    public Student updateImage(@RequestParam Long id, @RequestParam String containerName, @RequestParam MultipartFile file) {
+        return studentService.updateImageProfile(id, containerName, file);
     }
 
 }
