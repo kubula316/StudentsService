@@ -42,7 +42,8 @@ public class Student implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Role role;
 
-    List<String> enrolledCourses = new ArrayList<>();
+    @OneToMany(mappedBy = "student", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<EnrolledCourse> enrolledCourses = new ArrayList<>();
 
     private String profileImageUrl = "https://coursesapp.blob.core.windows.net/student-profile-image-container/BlankProfile.png";
 

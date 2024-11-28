@@ -23,3 +23,5 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
 
     List<Student> findAllByStatus(Student.Status status);
 }
+
+

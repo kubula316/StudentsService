@@ -3,6 +3,7 @@ package com.jakub.students.security;
 import com.jakub.students.controller.AuthenticationRequest;
 import com.jakub.students.controller.AuthenticationResponse;
 import com.jakub.students.controller.RegisterRequest;
+import com.jakub.students.model.EnrolledCourse;
 import com.jakub.students.model.Role;
 import com.jakub.students.model.Student;
 import com.jakub.students.repository.StudentRepository;
@@ -32,7 +33,7 @@ public class AuthenticationService {
                 .status(Student.Status.ACTIVE)
                 .password(passwordEncoder.encode(request.getPassword()))
                 .role(Role.USER)
-                .enrolledCourses(new ArrayList<String>())
+                .enrolledCourses(new ArrayList<EnrolledCourse>())
                 .profileImageUrl("https://coursesapp.blob.core.windows.net/student-profile-image-container/BlankProfile.png")
                 .build();
         studentRepository.save(user);

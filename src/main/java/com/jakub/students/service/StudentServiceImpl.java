@@ -2,6 +2,7 @@ package com.jakub.students.service;
 
 import com.jakub.students.exception.StudentError;
 import com.jakub.students.exception.StudentException;
+import com.jakub.students.model.EnrolledCourse;
 import com.jakub.students.model.Student;
 import com.jakub.students.repository.StudentRepository;
 import com.jakub.students.storage.ImageStorageClient;
@@ -105,7 +106,7 @@ public class StudentServiceImpl implements StudentService {
     public void addCourse(Long id, String courseCode) {
         try {
             Student student = studentRepository.findById(id).orElseThrow(() -> new StudentException(StudentError.STUDENT_NOT_FOUND));
-            student.getEnrolledCourses().add(courseCode);
+            student.getEnrolledCourses().add(new EnrolledCourse(courseCode, student));
             studentRepository.save(student);
         } catch (Exception e){
             throw new StudentException(StudentError.CAN_NOT_ADD_COURSE);
