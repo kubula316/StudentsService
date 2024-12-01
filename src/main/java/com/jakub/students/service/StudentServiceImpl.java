@@ -4,6 +4,7 @@ import com.jakub.students.exception.StudentError;
 import com.jakub.students.exception.StudentException;
 import com.jakub.students.model.EnrolledCourse;
 import com.jakub.students.model.Student;
+import com.jakub.students.repository.EnrolledCourseRepository;
 import com.jakub.students.repository.StudentRepository;
 import com.jakub.students.storage.ImageStorageClient;
 import org.springframework.stereotype.Service;
@@ -21,10 +22,12 @@ public class StudentServiceImpl implements StudentService {
     private final StudentRepository studentRepository;
     private final ImageStorageClient imageStorageClient;
 
+    private final EnrolledCourseRepository enrolledCourseRepository;
 
-    public StudentServiceImpl(StudentRepository studentRepository, ImageStorageClient imageStorageClient) {
+    public StudentServiceImpl(StudentRepository studentRepository, ImageStorageClient imageStorageClient, EnrolledCourseRepository enrolledCourseRepository) {
         this.studentRepository = studentRepository;
         this.imageStorageClient = imageStorageClient;
+        this.enrolledCourseRepository = enrolledCourseRepository;
     }
 
     @Override
@@ -123,6 +126,32 @@ public class StudentServiceImpl implements StudentService {
         }
         return studentRepository.save(student);
     }
+
+    @Override
+    public Student markLectureAsUncompleted(Long studentId, String courseId, String lectureId) {
+        EnrolledCourse enrolledCourse = enrolledCourseRepository.findByCourseIdAndStudentId(courseId, studentId).orElseThrow(()-> new StudentException(StudentError.ENROLLED_COURSE_NOT_FOUND));
+        if (enrolledCourse.getCompletedLecturesId().contains(lectureId)){
+            enrolledCourse.getCompletedLecturesId().remove(lectureId);
+        }else {
+            throw new StudentException(StudentError.CAN_NOT_REMOVE_LECTURE);
+        }
+        enrolledCourseRepository.save(enrolledCourse);
+        return studentRepository.findById(studentId).orElseThrow(()-> new StudentException(StudentError.STUDENT_NOT_FOUND));
+    }
+
+    @Override
+    public Student markLectureAsCompleted(Long studentId, String courseId, String lectureId) {
+        EnrolledCourse enrolledCourse = enrolledCourseRepository.findByCourseIdAndStudentId(courseId, studentId).orElseThrow(()-> new StudentException(StudentError.ENROLLED_COURSE_NOT_FOUND));
+        if (enrolledCourse.getCompletedLecturesId().contains(lectureId)){
+            throw new StudentException(StudentError.CAN_NOT_ADD_ENROLLEDCOURSE);
+        }else {
+            enrolledCourse.getCompletedLecturesId().add(lectureId);
+        }
+        enrolledCourseRepository.save(enrolledCourse);
+        return studentRepository.findById(studentId).orElseThrow(()-> new StudentException(StudentError.STUDENT_NOT_FOUND));
+    }
+
+
 
     public String uploadImage(String containerName, MultipartFile file)throws IOException {
         try(InputStream inputStream = file.getInputStream()) {

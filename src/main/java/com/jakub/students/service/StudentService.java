@@ -1,5 +1,6 @@
 package com.jakub.students.service;
 
+import com.jakub.students.model.EnrolledCourse;
 import com.jakub.students.model.Student;
 import jakarta.validation.Valid;
 import org.springframework.web.multipart.MultipartFile;
@@ -25,6 +26,7 @@ public interface StudentService {
     Student updateImageProfile(Long id, String containerName, MultipartFile file);
 
 
+    Student markLectureAsCompleted(Long studentId, String courseId, String lectureId);
 
-
+    Student markLectureAsUncompleted(Long studentId, String courseId, String lectureId);
 }

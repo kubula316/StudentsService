@@ -1,5 +1,6 @@
 package com.jakub.students.controller;
 
+import com.jakub.students.model.EnrolledCourse;
 import com.jakub.students.repository.StudentRepository;
 import com.jakub.students.model.Student;
 import com.jakub.students.security.AuthenticationService;
@@ -32,8 +33,15 @@ public class StudentsController {
         this.studentService = studentService;
     }
 
+    @PostMapping("/addLectureToCompleted")
+    public Student markLectureAsCompleted(@RequestParam Long studentId, @RequestParam String courseId, @RequestParam String lectureId){
+        return studentService.markLectureAsCompleted(studentId, courseId, lectureId);
+    }
 
-
+    @DeleteMapping("/removeLectureFromCompleted")
+    public Student markLectureAsUncompleted(@RequestParam Long studentId, @RequestParam String courseId, @RequestParam String lectureId){
+        return studentService.markLectureAsUncompleted(studentId, courseId, lectureId);
+    }
     @GetMapping
     public List<Student> getStudents(@RequestParam(required = false) Student.Status status) {
         return studentService.getStudents(status);
