@@ -140,6 +140,13 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
+    public void removeCourse(String email, String courseCode) {
+        Student student = studentRepository.findByEmail(email).orElseThrow(()-> new StudentException(StudentError.STUDENT_NOT_FOUND));
+        student.getEnrolledCourses().removeIf(enrolledCourse -> enrolledCourse.getCourseId().equals(courseCode));
+        studentRepository.save(student);
+    }
+
+    @Override
     public Student markLectureAsCompleted(Long studentId, String courseId, String lectureId) {
         EnrolledCourse enrolledCourse = enrolledCourseRepository.findByCourseIdAndStudentId(courseId, studentId).orElseThrow(()-> new StudentException(StudentError.ENROLLED_COURSE_NOT_FOUND));
         if (enrolledCourse.getCompletedLecturesId().contains(lectureId)){

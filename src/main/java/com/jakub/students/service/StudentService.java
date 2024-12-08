@@ -29,4 +29,6 @@ public interface StudentService {
     Student markLectureAsCompleted(Long studentId, String courseId, String lectureId);
 
     Student markLectureAsUncompleted(Long studentId, String courseId, String lectureId);
+
+    void removeCourse(String email, String courseCode);
 }

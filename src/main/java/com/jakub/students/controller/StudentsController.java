@@ -72,6 +72,11 @@ public class StudentsController {
         studentService.addCourse(id, courseCode);
     }
 
+    @DeleteMapping("/removeCourse")
+    public void removeCourse(@RequestParam String email, @RequestParam String courseCode){
+        studentService.removeCourse(email, courseCode);
+    }
+
 
     @PatchMapping("/{id}")
     public Student patchStudent(@PathVariable Long id,@RequestBody Student student){
