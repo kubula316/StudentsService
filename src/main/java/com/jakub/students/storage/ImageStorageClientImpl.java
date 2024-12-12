@@ -38,4 +38,5 @@ public class ImageStorageClientImpl implements ImageStorageClient{
             throw new StudentException(StudentError.FAILED_TO_UPLOAD_IMAGE);
         }
     }
+
 }
