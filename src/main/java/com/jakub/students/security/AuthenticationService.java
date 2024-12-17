@@ -8,6 +8,8 @@ import com.jakub.students.model.Role;
 import com.jakub.students.model.Student;
 import com.jakub.students.repository.StudentRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -38,8 +40,9 @@ public class AuthenticationService {
                 .build();
         studentRepository.save(user);
         var jwtToken = jwtService.generateToken(user, user.getId());
+        var refreshToken = jwtService.generateRefreshToken(user, user.getId());
         return AuthenticationResponse.builder()
-                .token(jwtToken).build();
+                .token(jwtToken).refreshToken(refreshToken).build();
     }
 
     public AuthenticationResponse authenticate(AuthenticationRequest request) {
@@ -47,9 +50,31 @@ public class AuthenticationService {
         var user = studentRepository.findByEmail(request.getEmail())
                 .orElseThrow();
         var jwtToken = jwtService.generateToken(user, user.getId());
+        var refreshToken = jwtService.generateRefreshToken(user, user.getId());
         return AuthenticationResponse.builder()
-                .token(jwtToken).build();
+                .token(jwtToken)
+                .refreshToken(refreshToken)
+                .build();
     }
+
+    public ResponseEntity<AuthenticationResponse> refreshToken(String refreshToken) {
+        System.out.println("STARY TOKEN: " + refreshToken);
+        if (jwtService.isTokenExpired(refreshToken)){
+            System.out.println("DUPA TOKEN NIEWAZNY");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        }
+        var userId = jwtService.extractUserId(refreshToken);
+        var user = studentRepository.findById(userId).orElseThrow();
+
+        var newJwtToken = jwtService.generateToken(user, userId);
+        var newRefreshToken = jwtService.generateRefreshToken(user, userId);
+        System.out.println("NOWY TOKEN: " + newJwtToken);
+        return ResponseEntity.ok(AuthenticationResponse.builder()
+                .token(newJwtToken)
+                .refreshToken(newRefreshToken)
+                .build());
+    }
+
 
     public boolean isTokenValid(String token) {
         return !jwtService.isTokenExpired(token);

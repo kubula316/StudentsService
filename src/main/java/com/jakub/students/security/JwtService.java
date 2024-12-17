@@ -32,8 +32,23 @@ public class JwtService {
                 .builder()
                 .setClaims(extraClaims)
                 .setSubject(userDetails.getUsername())
+                .claim("type", "auth")
                 .setIssuedAt(new Date(System.currentTimeMillis()))
-                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 24))
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 1)) //ilosc minut ostatnia liczba
+                .signWith(getSignInKey(), SignatureAlgorithm.HS256)
+                .compact();
+    }
+
+    public String generateRefreshToken(UserDetails userDetails, Long userId) {
+        Map<String, Object> extraClaims = new HashMap<>();
+        extraClaims.put("id", userId);
+        return Jwts
+                .builder()
+                .setClaims(extraClaims)
+                .setSubject(userDetails.getUsername())
+                .claim("type", "refresh")
+                .setIssuedAt(new Date(System.currentTimeMillis()))
+                .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 24 * 7)) // 7 dni ważności
                 .signWith(getSignInKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
@@ -70,6 +85,10 @@ public class JwtService {
 
     public Long extractUserId(String token) {
         Claims claims = extractAllClaims(token);
-        return claims.get("id", Long.class); // Zakładając, że ID jest typu Long
+        return claims.get("id", Long.class);
+    }
+
+    public String extractTokenType(String token) {
+        return extractClaim(token, claims -> claims.get("type", String.class));
     }
 }

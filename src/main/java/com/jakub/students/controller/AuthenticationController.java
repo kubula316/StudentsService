@@ -7,6 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Map;
+
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
@@ -25,13 +27,17 @@ public class AuthenticationController {
     public ResponseEntity<AuthenticationResponse> authenticate(
             @RequestBody AuthenticationRequest request
     ) {
-        System.out.println("DEBUG");
         return ResponseEntity.ok(authenticationService.authenticate(request));
+    }
+
+    @PostMapping("/refresh-token")
+    public ResponseEntity<AuthenticationResponse> refreshToken(@RequestBody RefreshRequest refreshToken){
+        String token = refreshToken.getRefreshToken();
+        return authenticationService.refreshToken(token);
     }
 
     @GetMapping("/validate-token")
     public ResponseEntity<Boolean> validateToken(@RequestHeader("Authorization") String authHeader) {
-        System.out.println("DEBUG");
         if (authHeader == null || !authHeader.startsWith("Bearer ")) {
 
             return new ResponseEntity<>(false, HttpStatus.UNAUTHORIZED);
