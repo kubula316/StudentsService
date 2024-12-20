@@ -58,7 +58,6 @@ public class AuthenticationService {
     }
 
     public ResponseEntity<AuthenticationResponse> refreshToken(String refreshToken) {
-        System.out.println("STARY TOKEN: " + refreshToken);
         if (jwtService.isTokenExpired(refreshToken)){
             System.out.println("DUPA TOKEN NIEWAZNY");
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
@@ -68,7 +67,6 @@ public class AuthenticationService {
 
         var newJwtToken = jwtService.generateToken(user, userId);
         var newRefreshToken = jwtService.generateRefreshToken(user, userId);
-        System.out.println("NOWY TOKEN: " + newJwtToken);
         return ResponseEntity.ok(AuthenticationResponse.builder()
                 .token(newJwtToken)
                 .refreshToken(newRefreshToken)

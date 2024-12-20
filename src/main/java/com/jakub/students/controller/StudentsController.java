@@ -88,6 +88,11 @@ public class StudentsController {
         return studentService.getStudentsByEmail(mailList);
     }
 
+    @PostMapping("/update")
+    @ResponseStatus(HttpStatus.CREATED)
+    public Student updateImage(@RequestParam Long id, @RequestParam String containerName, @RequestParam MultipartFile file) {
+        return studentService.updateImageProfile(id, containerName, file);
+    }
 
 
 }
