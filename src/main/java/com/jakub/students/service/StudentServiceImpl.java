@@ -13,9 +13,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 @Service
 public class StudentServiceImpl implements StudentService {
@@ -120,6 +118,7 @@ public class StudentServiceImpl implements StudentService {
     public Student updateImageProfile(Long id, String containerName, MultipartFile file) {
         Student student = studentRepository.findById(id).orElseThrow(() -> new StudentException(StudentError.STUDENT_NOT_FOUND));
         try {
+            deleteImage(containerName, student.getProfileImageUrl());
             student.setProfileImageUrl(uploadImage(containerName, file));
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -163,6 +162,14 @@ public class StudentServiceImpl implements StudentService {
     public String uploadImage(String containerName, MultipartFile file)throws IOException {
         try(InputStream inputStream = file.getInputStream()) {
             return this.imageStorageClient.uploadImage(containerName, file.getOriginalFilename(), inputStream, file.getSize());
+        }
+    }
+
+    public void deleteImage(String containerName, String url)throws IOException {
+        try {
+            this.imageStorageClient.deleteImage(containerName, url);
+        } catch (Exception e){
+            throw new StudentException(StudentError.FAILED_TO_UPLOAD_IMAGE);
         }
     }
 

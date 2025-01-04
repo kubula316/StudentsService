@@ -39,4 +39,29 @@ public class ImageStorageClientImpl implements ImageStorageClient{
         }
     }
 
+    public void deleteImage(String containerName, String oldImageUrl){
+        try {
+            // get the BlobContainerClient object to interact with the container
+            BlobContainerClient blobContainerClient = blobServiceClient.getBlobContainerClient(containerName);
+
+            // Jeśli istnieje stare zdjęcie, usuń je
+            if (oldImageUrl != null && !oldImageUrl.isEmpty() && !oldImageUrl.equals("https://coursesapp.blob.core.windows.net/student-profile-image-container/BlankProfile.png")) {
+                // Uzyskaj nazwę pliku starego zdjęcia (zakładając, że URL zawiera nazwę pliku)
+                String oldImageName = oldImageUrl.substring(oldImageUrl.lastIndexOf("/") + 1);
+
+                // Get the BlobClient for the old image
+                BlobClient oldBlobClient = blobContainerClient.getBlobClient(oldImageName);
+
+                // Usuń stare zdjęcie, jeśli istnieje
+                if (oldBlobClient.exists()) {
+                    oldBlobClient.delete();
+                }
+            }
+        }catch (Exception e){
+            throw new StudentException(StudentError.FAILED_TO_UPLOAD_IMAGE);
+        }
+    }
+
+
+
 }
