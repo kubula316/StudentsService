@@ -47,6 +47,7 @@ public class Student implements UserDetails {
 
     private String profileImageUrl = "https://coursesapp.blob.core.windows.net/student-profile-image-container/BlankProfile.png";
 
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of(new SimpleGrantedAuthority(role.name()));

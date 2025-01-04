@@ -62,10 +62,7 @@ public class StudentsController {
     public void deleteStudent(@PathVariable Long id){
         studentService.deleteStudent(id);
     }
-    @PutMapping("/{id}")
-    public Student putStudent(@PathVariable Long id,@RequestBody @Valid Student student){
-        return studentService.putStudent(id, student);
-    }
+
 
     @PostMapping("/addCourse")
     public void addCourse(@RequestParam Long id, @RequestParam String courseCode){
@@ -75,12 +72,6 @@ public class StudentsController {
     @DeleteMapping("/removeCourse")
     public void removeCourse(@RequestParam String email, @RequestParam String courseCode){
         studentService.removeCourse(email, courseCode);
-    }
-
-
-    @PatchMapping("/{id}")
-    public Student patchStudent(@PathVariable Long id,@RequestBody Student student){
-        return studentService.patchStudent(id, student);
     }
 
     @PostMapping("/members")
