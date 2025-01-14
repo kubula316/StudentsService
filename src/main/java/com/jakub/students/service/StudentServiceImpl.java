@@ -103,6 +103,7 @@ public class StudentServiceImpl implements StudentService {
         return studentRepository.findById(studentId).orElseThrow(()-> new StudentException(StudentError.STUDENT_NOT_FOUND));
     }
 
+
     @Override
     public void removeCourse(String email, String courseCode) {
         Student student = studentRepository.findByEmail(email).orElseThrow(()-> new StudentException(StudentError.STUDENT_NOT_FOUND));

@@ -14,6 +14,7 @@ import java.util.List;
 @EnableDiscoveryClient
 public class StudentsApplication {
 
+
 	public static void main(String[] args) {SpringApplication.run(StudentsApplication.class, args);}
 
 }

@@ -39,6 +39,7 @@ public class ImageStorageClientImpl implements ImageStorageClient{
         }
     }
 
+
     public void deleteImage(String containerName, String oldImageUrl){
         try {
             // get the BlobContainerClient object to interact with the container
