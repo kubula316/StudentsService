@@ -110,16 +110,13 @@ class StudentServiceImplTest {
 
     @Test
     void addCourse_ShouldAddEnrolledCourse() {
-        // Given
         Student student = new Student();
         student.setId(1L);
 
         when(studentRepository.findById(1L)).thenReturn(Optional.of(student));
 
-        // When
         studentService.addCourse(1L, "CS101");
 
-        // Then
         assertEquals(1, student.getEnrolledCourses().size());
         EnrolledCourse course = student.getEnrolledCourses().get(0);
         assertEquals("CS101", course.getCourseId());
@@ -132,7 +129,6 @@ class StudentServiceImplTest {
 
     @Test
     void markLectureAsUncompleted_ShouldThrowExceptionIfLectureNotFound() {
-        // Given
         EnrolledCourse course = new EnrolledCourse();
         course.setCompletedLecturesId(new ArrayList<>());
         course.setCourseId("course1");
@@ -141,9 +137,7 @@ class StudentServiceImplTest {
         when(enrolledCourseRepository.findByCourseIdAndStudentId("course1", 1L))
                 .thenReturn(Optional.of(course));
 
-        // Then
         assertThrows(StudentException.class, () -> {
-            // When
             studentService.markLectureAsUncompleted(1L, "course1", "lecture1");
         });
 
@@ -154,7 +148,6 @@ class StudentServiceImplTest {
 
     @Test
     void markLectureAsCompleted_ShouldAddLectureId() {
-        // Given
         EnrolledCourse course = new EnrolledCourse();
         course.setCompletedLecturesId(new ArrayList<>());
         course.setCourseId("course1");
@@ -170,17 +163,14 @@ class StudentServiceImplTest {
         when(studentRepository.findById(1L))
                 .thenReturn(Optional.of(student));
 
-        // When
         studentService.markLectureAsCompleted(1L, "course1", "lecture1");
 
-        // Then
         assertTrue(course.getCompletedLecturesId().contains("lecture1"));
         verify(enrolledCourseRepository, times(1)).save(course);
     }
 
     @Test
     void markLectureAsUncompleted_ShouldRemoveLectureId() {
-        // Given
         EnrolledCourse course = new EnrolledCourse();
         course.setCompletedLecturesId(new ArrayList<>(List.of("lecture1")));
         course.setCourseId("course1");
@@ -196,10 +186,8 @@ class StudentServiceImplTest {
         when(studentRepository.findById(1L))
                 .thenReturn(Optional.of(student));
 
-        // When
         studentService.markLectureAsUncompleted(1L, "course1", "lecture1");
 
-        // Then
         assertFalse(course.getCompletedLecturesId().contains("lecture1"));
         verify(enrolledCourseRepository, times(1)).save(course);
     }
@@ -217,10 +205,8 @@ class StudentServiceImplTest {
         when(studentRepository.findByEmail("email@example.com"))
                 .thenReturn(Optional.of(student));
 
-        // When
         studentService.removeCourse("email@example.com", "CS101");
 
-        // Then
         assertTrue(student.getEnrolledCourses().isEmpty());
         verify(studentRepository, times(1)).save(student);
     }

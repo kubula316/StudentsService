@@ -55,6 +55,7 @@ class AuthenticationControllerTest {
         verify(authenticationService, times(1)).register(registerRequest);
     }
 
+
     @Test
     void testAuthenticate() {
         AuthenticationRequest authRequest = AuthenticationRequest.builder()
